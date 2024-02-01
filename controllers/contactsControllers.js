@@ -11,22 +11,33 @@ const getAllContacts = async (req, res) => {
 };
 
 const getOneContact = async (req, res) => {
-  const getContactById = await contactsService.getContactById(req.params.id);
+//   const getContactById = await contactsService.getContactById(req.params.id);
 
-  if (!getContactById) {
+//   if (!getContactById) {
+//     throw HttpError(404);
+//   }
+
+//   res.status(200).json(getContactById);
+  try {
+    const getContactById = await contactsService.getContactById(req.params.id);
+    res.status(200).json(getContactById);
+  } catch (e) {
     throw HttpError(404);
   }
-
-  res.status(200).json(getContactById);
 };
 
 const deleteContact = async (req, res) => {
-  const removeContact = await contactsService.removeContact(req.params.id);
+//   const removeContact = await contactsService.removeContact(req.params.id);
 
-  if (!removeContact) {
+//   if (!removeContact) {
+//     throw HttpError(404);
+//   }
+//   res.status(200).json(removeContact);
+  try {const removeContact = await contactsService.removeContact(req.params.id);
+    res.status(200).json(removeContact);
+  } catch (e) {
     throw HttpError(404);
   }
-  res.status(200).json(removeContact);
 };
 
 const createContact = async (req, res) => {
