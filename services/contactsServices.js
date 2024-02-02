@@ -23,10 +23,10 @@ async function listContacts() {
   }
 }
 
-async function getContactById(id) {
+async function getContactById(contactId) {
   try {
     const contacts = await listContacts();
-    const contactFound = contacts.find((contact) => contact.id === id);
+    const contactFound = contacts.find((contact) => contact.id === contactId);
     return contactFound || null;
   } catch (error) {
     console.error("Error getting contact by ID:", error.message);
@@ -73,40 +73,20 @@ async function addContact({ name, email, phone }) {
 }
 
 async function updateContact(contactId, data) {
-  // const contacts = await listContacts();
-
-  // try {
-  //   const contacts = await listContacts();
-  //   const contactIdFound = contacts.findIndex((item) => item.id === contactId);
-  //   const contactFound = getContactById(contactId);
-
-  //   if (contactIdFound === -1) {
-  //     return null;
-  //   }
-  //   const updatedContact = {
-  //     id: contactFound.id,
-  //     name: user.name ? user.name : contactFound.name,
-  //     email: user.email ? user.email : contactFound.email,
-  //     phone: user.phone ? user.phone : contactFound.phone,
-  //   };
-  //   await removeContact(contactId);
-  //   await addContact(updatedContact);
-  //   return updatedContact;
-  // } catch (error) {
-  //   console.error("Error updating contact:", error.message);
-  //   return null;
-  // }
   try {
     const contacts = await listContacts();
     const index = contacts.findIndex((item) => item.id === contactId);
 
     if (index === -1) {
+      // console.log("Not found", error.message);
       return null;
     }
     const updatedContact = { ...contacts[index], ...data };
     contacts[index] = updatedContact;
+    // contacts[index] = {id, ...contacts[index], ...data };
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     return updatedContact;
+    // return contacts[index];
   } catch (error) {
     console.error("Error updating contact:", error.message);
     return null;
