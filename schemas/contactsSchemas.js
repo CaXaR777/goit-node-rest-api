@@ -22,4 +22,9 @@ const updateContactSchema = Joi.object({
   phone: Joi.string().pattern(/^\(\d{3}\) \d{3}-\d{4}$/),
 }).unknown(true);
 
+// const compiledCreateContactSchema = Joi.compile(createContactSchema);
+// const compiledUpdateContactSchema = Joi.compile(updateContactSchema);
+
 module.exports = { createContactSchema, updateContactSchema };
+
+// module.exports = { createContactSchema, updateContactSchema, compiledCreateContactSchema, compiledUpdateContactSchema };
