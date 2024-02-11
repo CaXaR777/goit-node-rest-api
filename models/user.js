@@ -7,7 +7,7 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Name is required'],
+    //   required: [true, 'Name is required'],
     },
     password: {
       type: String,
@@ -36,7 +36,7 @@ const userSchema = new Schema(
 userSchema.post('save', handleMongooseError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string(),
   email: Joi.string().required(),
   password: Joi.string().required(),
 });
