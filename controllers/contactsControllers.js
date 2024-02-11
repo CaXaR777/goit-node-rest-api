@@ -1,48 +1,33 @@
-const contactsService = require("../services/contactsServices.js");
 const HttpError = require("../helpers/HttpError");
 const ctrlWrapper = require("../helpers/ctrlWrapper");
+const { Contact } = require("../models/contact.js");
 
 const getAllContacts = async (req, res) => {
-  try {
-    const listContacts = await contactsService.listContacts();
-    res.status(200).json(listContacts);
-  } catch (e) {
-    console.log(e);
-  }
+  const listContacts = await Contact.find();
+  res.status(200).json(listContacts);
 };
 
 const getOneContact = async (req, res) => {
-  const getContactById = await contactsService.getContactById(req.params.id);
+  const getContactById = await Contact.findById(req.params.id);
 
   if (!getContactById) {
     throw HttpError(404);
   }
 
-  res.status(200).json(getContactById);
-  //   try {
-  //     const getContactById = await contactsService.getContactById(req.params.id);
-  //     res.status(200).json(getContactById);
-  //   } catch (e) {
-  //     throw HttpError(404);
-  //   }
+  res.json(getContactById);
 };
 
 const deleteContact = async (req, res) => {
-  const removeContact = await contactsService.removeContact(req.params.id);
+  const removeContact = await Contact.findByIdAndDelete(req.params.id);
 
   if (!removeContact) {
     throw HttpError(404);
   }
-  res.status(200).json(removeContact);
-  //   try {const removeContact = await contactsService.removeContact(req.params.id);
-  //     res.status(200).json(removeContact);
-  //   } catch (e) {
-  //     throw HttpError(404);
-  //   }
+  res.json(removeContact);
 };
 
 const createContact = async (req, res) => {
-  const addContact = await contactsService.addContact(req.body);
+  const addContact = await Contact.create(req.body);
 
   if (!addContact) {
     throw HttpError(404);
@@ -56,14 +41,31 @@ const updateContact = async (req, res) => {
   const { body } = req;
   if (!body || Object.keys(body).length === 0) {
     throw HttpError(400, "Body must have at least one field");
-  } 
+  }
 
-  const updateContact = await contactsService.updateContact(id, req.body);
-  
+  const updateContact = await Contact.findByIdAndUpdate(id, body, {
+    new: true,
+  });
+
   if (!updateContact) {
     throw HttpError(404);
   }
-  res.status(200).json(updateContact);
+  res.json(updateContact);
+};
+
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+  if (!body || Object.keys(body).length === 0) {
+    throw HttpError(400, "Body must have favorite field");
+  }
+  const updateFavorites = await Contact.findByIdAndUpdate(id, body, {
+    new: true,
+  });
+  if (!updateFavorites) {
+    throw HttpError(404);
+  }
+  res.json(updateFavorites);
 };
 
 module.exports = {
@@ -72,4 +74,5 @@ module.exports = {
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
