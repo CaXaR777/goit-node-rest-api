@@ -6,6 +6,7 @@ const isValidId = require('./isValidId');
 const handleMongooseError = require('./handleMongooseError');
 const upload = require('./upload');
 const resizeImage = require('./resizeImage');
+const sendEmail = require('./sendEmail');
 
 
-module.exports = { HttpError, ctrlWrapper, validateBody, authenticate, isValidId, handleMongooseError, resizeImage, upload };
+module.exports = { HttpError, ctrlWrapper, validateBody, authenticate, isValidId, handleMongooseError, resizeImage, upload, sendEmail };

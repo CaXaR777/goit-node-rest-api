@@ -2,14 +2,16 @@ const express = require('express');
 
 const authRouter = express.Router();
 const { validateBody, authenticate } = require('../helpers');//y
-const { userSchemas } = require('../models/user');
+const { userSchemas,  reVerificationSchema } = require('../models/user');
 const {
   register,
   login,
   getCurrent,
   logout,
   updateSubscription,
-  updateAvatar
+  updateAvatar,
+  verifyEmail,
+  reVerification,
 } = require('../controllers/auth');
 const {upload, resizeImage} = require('../helpers');
 
@@ -29,5 +31,10 @@ authRouter.patch(
     resizeImage,
     updateAvatar
   );
+
+authRouter.get("/verify/:verificationToken", verifyEmail);
+
+authRouter.post("/verify", validateBody(reVerificationSchema), reVerification);
+
 
 module.exports = authRouter;

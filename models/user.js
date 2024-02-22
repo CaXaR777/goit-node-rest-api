@@ -33,6 +33,16 @@ const userSchema = new Schema(
         type: String,
         required: [true, 'Avatar is required'],
       },
+      verify: {
+        // це поле визначає чи підтвердила людина e-mail
+        type: Boolean,
+        default: false,
+      },
+      verificationToken: {
+        // це поле для запису і порівняння коду підтвердження відправленого на e-mail при реєстрації
+        type: String,
+        required: [true, "Verify token is required"],
+      },
   },
   { versionKey: false, timestamps: true }
 );
@@ -50,6 +60,10 @@ const logInSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const reVerificationSchema = Joi.object({
+    email: Joi.string().email().required(),
+  });
+
 const userSchemas = {
   registerSchema,
   logInSchema,
@@ -60,4 +74,5 @@ const User = model('user', userSchema);
 module.exports = {
   User,
   userSchemas,
+  reVerificationSchema
 };
