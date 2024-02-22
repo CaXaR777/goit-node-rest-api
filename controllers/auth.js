@@ -19,7 +19,7 @@ const register = async (req, res ) => {
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email);
-    const newUser = await User.create({...req.body, password: hashPassword, avatarURL, verificationCode});
+    const newUser = await User.create({...req.body, password: hashPassword, avatarURL,verificationToken: verificationCode});
 
     const verifyEmail = {
         to: email,
