@@ -13,18 +13,18 @@ const avatarsDir = path.join(__dirname, '../', 'public', 'avatars');
 const register = async (req, res ) => {
     const {email, password} = req.body;
     const user = await User.findOne({email});
-    const verificationCode = nanoid();
+    const verificationToken = nanoid();
     if (user) {
         throw HttpError(409, 'Email in use') 
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email);
-    const newUser = await User.create({...req.body, password: hashPassword, avatarURL,verificationToken: verificationCode});
+    const newUser = await User.create({...req.body, password: hashPassword, avatarURL, verificationToken});
 
     const verifyEmail = {
         to: email,
         subject: 'Verification email sent',
-        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationCode}">Click verify email</a>`,
+        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
       };
       await sendEmail(verifyEmail);
 
@@ -32,7 +32,7 @@ const register = async (req, res ) => {
        user: {name: newUser.name,
         email: newUser.email,},
         avatarURL: avatarURL,
-        verificationToken: verificationCode,
+        verificationToken: verificationToken,
       });
 };
 
@@ -108,8 +108,8 @@ const updateAvatar = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-    const { verificationCode } = req.params;
-    const user = await User.findOne({ verificationCode });
+    const { verificationToken } = req.params;
+    const user = await User.findOne({ verificationToken });
     if (!user) {
       throw HttpError(404, "User not found");
     }
